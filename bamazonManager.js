@@ -32,11 +32,11 @@ var start = function () {
                     break;
 
                 case "View Low Inventory":
-                    //lowInventory();
+                    lowInventory();
                     break;
 
                 case "Add to Inventory":
-                    //addInventory();
+                    addInventory();
                     break;
 
                 case "Add New Product":
@@ -64,4 +64,49 @@ var forSale = function () {
         }
         start();
     })
+}
+
+var lowInventory = function () {
+    connection.query("SELECT * FROM products", function (err, res) {
+        if (err) throw err;
+        lowInv = [];
+        console.log("PRODUCTS WITH LOW INVENTORY");
+        console.log('===============================')
+        for (var i = 0, n = res.length; i < n; i++) {
+            if (res[i].stock_quantity <= 50) {
+
+                console.log(res[i].product_name + ": Quantity Remaining = " + res[i].stock_quantity);
+                console.log('-----------------------')
+
+            }
+        }
+        start();
+    })
+}
+
+var addInventory = function () {
+    inquirer.prompt([{
+        name: "id",
+        type: "toAdd",
+        message: "What is the product ID that you would like to add inventory to?",
+    }, {
+        type: "input",
+        name: "amount",
+        message: 'how many units would you like to add?'
+
+    }]).then(function (answers) {
+        console.log(res[0].stock_quantity)
+        var amount = parseFloat(answers.amount);
+        connection.query("SELECT * FROM products WHERE item_id= ?", [answers.toAdd], function (err, res) {
+            if (err) throw err;
+
+
+            connection.query("UPDATE Product SET ? WHERE ?", [{
+                stock_quantity: res[0].stock_quantity + amount,
+            }, {
+                item_id: answers.toAdd
+            }], function (err, res) { });
+        })
+        start();
+    });
 }
