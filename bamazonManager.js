@@ -40,7 +40,7 @@ var start = function () {
                     break;
 
                 case "Add New Product":
-                    //addproduct();
+                    addProduct();
                     break;
 
                 default:
@@ -86,8 +86,8 @@ var lowInventory = function () {
 
 var addInventory = function () {
     inquirer.prompt([{
-        name: "id",
-        type: "toAdd",
+        type: "input",
+        name: "toAdd",
         message: "What is the product ID that you would like to add inventory to?",
     }, {
         type: "input",
@@ -95,18 +95,61 @@ var addInventory = function () {
         message: 'how many units would you like to add?'
 
     }]).then(function (answers) {
-        console.log(res[0].stock_quantity)
+
         var amount = parseFloat(answers.amount);
         connection.query("SELECT * FROM products WHERE item_id= ?", [answers.toAdd], function (err, res) {
             if (err) throw err;
 
-
-            connection.query("UPDATE Product SET ? WHERE ?", [{
+            connection.query("UPDATE products SET ? WHERE ?", [{
                 stock_quantity: res[0].stock_quantity + amount,
             }, {
                 item_id: answers.toAdd
             }], function (err, res) { });
+            var newQ = res[0].stock_quantity + amount;
+            console.log("----------------------");
+            console.log("Item " + answers.toAdd + " has been updated! New stock quantity is " + newQ);
+            console.log("----------------------");
+            start();
         })
-        start();
+
     });
+
 }
+
+var addProduct = function () {
+    inquirer.prompt([{
+        type: 'input',
+        name: 'newProduct',
+        message: 'What product would you like to add?'
+    }, {
+        type: 'input',
+        name: 'amount',
+        message: "How much are you adding?"
+    }, {
+        type: 'input',
+        name: 'cost',
+        message: 'How much does each item cost?',
+    }, {
+        type: 'input',
+        name: 'dept',
+        message: "What department is it being added to? "
+
+    }]).then(function (answers) {
+        var amount = parseFloat(answers.amount);
+        var cost = parseFloat(answers.cost);
+        connection.query("INSERT INTO products SET ?", {
+            product_name: answers.newProduct,
+            department_name: answers.dept,
+            price: cost,
+            stock_quantity: amount
+        }, function (err, res) { });
+        console.log("----------------------");
+        console.log("Product has been added!");
+        console.log("----------------------");
+        start();
+
+    })
+}
+
+
+
