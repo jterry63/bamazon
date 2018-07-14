@@ -4,6 +4,14 @@ Bamazon is a node application that is an amazon-like store. The customer can pic
 
  Below is a preview of Bamazon:
 
-### Screenshots
+### Customer View
 
 ![alt text](images/1.png "Description goes here")
+
+### Manager View
+![alt text](images/2.png "Description goes here")
+![alt text](images/3.png "Description goes here")
+![alt text](images/4.png "Description goes here")
+![alt text](images/5.png "Description goes here")
+![alt text](images/6.png "Description goes here")
+
